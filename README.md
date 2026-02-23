@@ -63,3 +63,7 @@ If you want more control, you can manually add the augends to your configuration
   end,
 }
 ```
+
+## Documentation
+
+For more details, see `:help tailwindcss-dial`.

@@ -1,0 +1,95 @@
+*tailwindcss-dial.txt*       A Neovim plugin that extends dial.nvim to toggle TailwindCSS classes.
+
+==============================================================================
+INTRODUCTION                                           *tailwindcss-dial-intro*
+
+tailwindcss-dial.nvim is a Neovim plugin that provides TailwindCSS augends for
+|dial.nvim|. It allows you to toggle between TailwindCSS color shades and
+utility classes with ease.
+
+==============================================================================
+INSTALLATION                                           *tailwindcss-dial-install*
+
+Using |lazy.nvim|:
+
+>lua
+    {
+      "ruicsh/tailwindcss-dial.nvim",
+      dependencies = { "monaqa/dial.nvim" },
+      opts = {
+        -- group = "default", -- optional, defaults to "default"
+      },
+    }
+<
+
+==============================================================================
+CONFIGURATION                                          *tailwindcss-dial-config*
+
+The plugin provides two ways to configure it.
+
+------------------------------------------------------------------------------
+AUTOMATIC SETUP                                      *tailwindcss-dial-automatic*
+
+The recommended way is to use the `setup()` function. This will automatically
+detect your existing `dial.nvim` configuration and augment your specified group
+(defaults to "default") with TailwindCSS augends.
+
+>lua
+    require("tailwindcss-dial").setup({
+      group = "default", -- optional
+    })
+<
+
+------------------------------------------------------------------------------
+MANUAL SETUP                                            *tailwindcss-dial-manual*
+
+If you want more control, you can manually add the augends to your configuration
+using the `augends()` function:
+
+>lua
+    local dial_config = require("dial.config")
+    local tailwindcss_dial = require("tailwindcss-dial")
+
+    dial_config.augends:register_group({
+      default = {
+        -- ... your other augends
+        table.unpack(tailwindcss_dial.augends()),
+      },
+    })
+<
+
+==============================================================================
+FEATURES                                               *tailwindcss-dial-features*
+
+The plugin supports the following TailwindCSS categories:
+
+- Colors (shades from 50 to 950)
+- Border Radius
+- Blend Modes
+- Align Items
+- Background (linear, position, repeat, size)
+- Box Shadow
+- Display
+- Flex Direction
+- Font (size, stretch, weight)
+- Justify Content
+- Line Height
+- Position
+- Text (align, wrap)
+- Letter Spacing (tracking)
+
+==============================================================================
+API                                                    *tailwindcss-dial-api*
+
+tailwindcss-dial.augends()                          *tailwindcss-dial.augends()*
+    Returns a table of augends that can be registered with |dial.nvim|.
+
+tailwindcss-dial.setup({opts})                        *tailwindcss-dial.setup()*
+    Configures the plugin.
+    Parameters: ~
+        {opts}  A table with the following optional keys:
+                - `group`: (string) The name of the dial group to augment.
+                  Defaults to "default".
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
