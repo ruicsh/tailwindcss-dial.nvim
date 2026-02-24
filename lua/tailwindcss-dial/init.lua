@@ -1,6 +1,14 @@
 local M = {}
 
-local groups = require("tailwindcss-dial.groups")
+local backgrounds = require("tailwindcss-dial.backgrounds")
+local borders = require("tailwindcss-dial.borders")
+local colors = require("tailwindcss-dial.colors")
+local effects = require("tailwindcss-dial.effects")
+local flexbox_grid = require("tailwindcss-dial.flexbox-grid")
+local layout = require("tailwindcss-dial.layout")
+local sizing = require("tailwindcss-dial.sizing")
+local spacing = require("tailwindcss-dial.spacing")
+local typography = require("tailwindcss-dial.typography")
 
 --- @return table[]
 function M.augends()
@@ -9,9 +17,9 @@ function M.augends()
   local result = {}
 
   -- Colors
-  for _, color in ipairs(groups.colors) do
+  for _, color in ipairs(colors.names) do
     local color_group = {}
-    for _, shade in ipairs(groups.shades) do
+    for _, shade in ipairs(colors.shades) do
       table.insert(color_group, color .. "-" .. shade)
     end
     table.insert(
@@ -39,7 +47,7 @@ function M.augends()
 
   for _, prefix in ipairs(border_radius_prefixes) do
     local group = {}
-    for _, value in ipairs(groups.border_radius_values) do
+    for _, value in ipairs(borders.border_radius_values) do
       table.insert(group, "rounded-" .. prefix .. value)
     end
     table.insert(
@@ -56,7 +64,7 @@ function M.augends()
   local blend_prefixes = { "mix-blend-", "bg-blend-" }
   for _, prefix in ipairs(blend_prefixes) do
     local group = {}
-    for _, mode in ipairs(groups.blend_modes) do
+    for _, mode in ipairs(effects.blend_modes) do
       table.insert(group, prefix .. mode)
     end
     table.insert(
@@ -69,31 +77,42 @@ function M.augends()
     )
   end
 
-  -- Word rules
+  -- Full word rules
   local word_rules = {
-    groups.align_items,
-    groups.bg_linear,
-    groups.bg_position,
-    groups.bg_repeat,
-    groups.bg_size,
-    groups.box_shadow,
-    groups.display,
-    groups.flex_direction,
-    groups.font_size,
-    groups.font_stretch,
-    groups.font_weight,
-    groups.height,
-    groups.justify_content,
-    groups.line_height,
-    groups.max_height,
-    groups.max_width,
-    groups.min_height,
-    groups.min_width,
-    groups.position,
-    groups.text_align,
-    groups.text_wrap,
-    groups.tracking,
-    groups.width,
+    backgrounds.bg_linear,
+    backgrounds.bg_position,
+    backgrounds.bg_repeat,
+    backgrounds.bg_size,
+
+    effects.box_shadow,
+
+    flexbox_grid.align_items,
+    flexbox_grid.flex_direction,
+    flexbox_grid.justify_content,
+
+    layout.display,
+    layout.position,
+
+    sizing.block,
+    sizing.height,
+    sizing.inline,
+    sizing.max_block,
+    sizing.max_height,
+    sizing.max_inline,
+    sizing.max_width,
+    sizing.min_block,
+    sizing.min_height,
+    sizing.min_inline,
+    sizing.min_width,
+    sizing.width,
+
+    typography.font_size,
+    typography.font_stretch,
+    typography.font_weight,
+    typography.line_height,
+    typography.text_align,
+    typography.text_wrap,
+    typography.tracking,
   }
 
   for _, group in ipairs(word_rules) do
@@ -107,9 +126,10 @@ function M.augends()
     )
   end
 
+  -- Partial word rules (e.g., margin, padding)
   local non_word_rules = {
-    groups.margin,
-    groups.padding,
+    spacing.margin,
+    spacing.padding,
   }
 
   for _, group in ipairs(non_word_rules) do
