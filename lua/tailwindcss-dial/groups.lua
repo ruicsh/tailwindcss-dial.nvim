@@ -227,4 +227,49 @@ M.tracking = {
   "tracking-widest",
 }
 
+local dims = {
+  "auto",
+  "full",
+  "screen",
+  "min",
+  "max",
+  "fit",
+  "0",
+  "px",
+  "3xs",
+  "2xs",
+  "xs",
+  "sm",
+  "md",
+  "lg",
+  "xl",
+  "2xl",
+  "3xl",
+  "4xl",
+  "5xl",
+  "6xl",
+  "7xl",
+  "dvw",
+  "dvh",
+  "lvw",
+  "lvh",
+  "svw",
+  "svh",
+}
+
+M.width = {}
+M.min_width = {}
+M.max_width = {}
+M.height = {}
+M.min_height = {}
+M.max_height = {}
+for _, dim in ipairs(dims) do
+  table.insert(M.width, "w-" .. dim)
+  table.insert(M.height, "h-" .. dim)
+  table.insert(M.min_width, "min-w-" .. dim)
+  table.insert(M.max_width, "max-w-" .. dim)
+  table.insert(M.min_height, "min-h-" .. dim)
+  table.insert(M.max_height, "max-h-" .. dim)
+end
+
 return M

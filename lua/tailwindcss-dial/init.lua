@@ -82,12 +82,18 @@ function M.augends()
     groups.font_size,
     groups.font_stretch,
     groups.font_weight,
+    groups.height,
     groups.justify_content,
     groups.line_height,
+    groups.max_height,
+    groups.max_width,
+    groups.min_height,
+    groups.min_width,
     groups.position,
     groups.text_align,
     groups.text_wrap,
     groups.tracking,
+    groups.width,
   }
 
   for _, group in ipairs(word_rules) do
