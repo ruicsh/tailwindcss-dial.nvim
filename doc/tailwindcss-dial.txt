@@ -18,6 +18,7 @@ Using |lazy.nvim|:
       dependencies = { "monaqa/dial.nvim" },
       opts = {
         -- group = "default", -- optional, defaults to "default"
+        -- filetype = { "typescript", "tsx" }, -- optional
       },
     }
 <
@@ -37,8 +38,13 @@ detect your existing `dial.nvim` configuration and augment your specified group
 >lua
     require("tailwindcss-dial").setup({
       group = "default", -- optional
+      filetype = { "typescript", "tsx" }, -- optional
     })
 <
+
+Notes:
+- If you configure `filetype`, the plugin will not modify the default group.
+- If you configure `group`, the plugin will not register filetype augends.
 
 ------------------------------------------------------------------------------
 MANUAL SETUP                                            *tailwindcss-dial-manual*
@@ -90,6 +96,10 @@ tailwindcss-dial.setup({opts})                        *tailwindcss-dial.setup()*
         {opts}  A table with the following optional keys:
                 - `group`: (string) The name of the dial group to augment.
                   Defaults to "default".
+                - `filetype`: (string|string[]) Filetype(s) to augment via
+                  `dial.config.augends:on_filetype()`. TailwindCSS augends are
+                  appended to any existing filetype augends.
+                  Note: if `group` is set, no filetype augends are registered.
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:

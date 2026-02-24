@@ -231,13 +231,51 @@ function M.augends()
 end
 
 local configured_groups = {}
+local configured_filetypes = {}
 
---- @param opts? { group: string }
+local function merge_augends(existing, new)
+  local final = {}
+  if type(existing) == "table" then
+    for _, a in ipairs(existing) do
+      table.insert(final, a)
+    end
+  end
+  for _, a in ipairs(new) do
+    table.insert(final, a)
+  end
+  return final
+end
+
+local function normalize_filetypes(opts)
+  if not opts then
+    return {}
+  end
+
+  local filetypes = opts.filetype or opts.filetypes
+  if not filetypes then
+    return {}
+  end
+
+  if type(filetypes) == "string" then
+    return { filetypes }
+  end
+
+  if type(filetypes) == "table" then
+    local list = {}
+    for _, value in ipairs(filetypes) do
+      if type(value) == "string" and value ~= "" then
+        table.insert(list, value)
+      end
+    end
+    return list
+  end
+
+  return {}
+end
+
+--- @param opts? { group: string, filetype?: string|string[], filetypes?: string[] }
 function M.setup(opts)
   local group_name = (opts and opts.group) or "default"
-  if configured_groups[group_name] then
-    return
-  end
 
   local status, dial_config = pcall(require, "dial.config")
   if not status or not dial_config.augends then
@@ -246,39 +284,52 @@ function M.setup(opts)
 
   local new_augends = M.augends()
 
-  -- dial.nvim stores groups in `augends.group` (singular), but some versions might use `groups`
-  local group_table = dial_config.augends.group or dial_config.augends.groups
-  if not group_table then
-    -- Fallback to calling register_group directly if we can't find the table
-    dial_config.augends:register_group({
-      [group_name] = new_augends,
-    })
-    configured_groups[group_name] = true
+  local filetypes = normalize_filetypes(opts)
+
+  if #filetypes == 0 and not configured_groups[group_name] then
+    -- dial.nvim stores groups in `augends.group` (singular), but some versions might use `groups`
+    local group_table = dial_config.augends.group or dial_config.augends.groups
+    if not group_table then
+      -- Fallback to calling register_group directly if we can't find the table
+      dial_config.augends:register_group({
+        [group_name] = new_augends,
+      })
+      configured_groups[group_name] = true
+    else
+      local target_group = group_table[group_name]
+
+      -- If the group doesn't exist, we start with an empty table.
+      if not target_group or type(target_group) ~= "table" then
+        target_group = {}
+      end
+
+      dial_config.augends:register_group({
+        [group_name] = merge_augends(target_group, new_augends),
+      })
+
+      configured_groups[group_name] = true
+    end
+  end
+
+  if (opts and opts.group) or #filetypes == 0 then
     return
   end
 
-  local target_group = group_table[group_name]
-
-  -- If the group doesn't exist, we start with an empty table.
-  if not target_group or type(target_group) ~= "table" then
-    target_group = {}
+  local filetype_table = dial_config.augends.filetype
+  for _, filetype in ipairs(filetypes) do
+    if not configured_filetypes[filetype] then
+      local existing = filetype_table and filetype_table[filetype]
+      local final = merge_augends(existing, new_augends)
+      if dial_config.augends.on_filetype then
+        dial_config.augends:on_filetype({
+          [filetype] = final,
+        })
+      elseif filetype_table then
+        filetype_table[filetype] = final
+      end
+      configured_filetypes[filetype] = true
+    end
   end
-
-  -- We create a new table to avoid modifying the existing one in place if it's used elsewhere,
-  -- We'll just append to a new list that starts with the existing ones.
-  local final_group = {}
-  for _, a in ipairs(target_group) do
-    table.insert(final_group, a)
-  end
-  for _, a in ipairs(new_augends) do
-    table.insert(final_group, a)
-  end
-
-  dial_config.augends:register_group({
-    [group_name] = final_group,
-  })
-
-  configured_groups[group_name] = true
 end
 
 return M
