@@ -16,6 +16,7 @@ local tables = require("tailwindcss-dial.tables")
 local transforms = require("tailwindcss-dial.transforms")
 local transitions_animation = require("tailwindcss-dial.transitions_animation")
 local typography = require("tailwindcss-dial.typography")
+local variants = require("tailwindcss-dial.variants")
 
 --- @return table[]
 function M.augends()
@@ -214,6 +215,12 @@ function M.augends()
     transforms.scale,
     transforms.skew,
     transforms.translate,
+
+    variants.anchor,
+    variants.order,
+    variants.input,
+    variants.pseudo,
+    variants.breakpoints,
   }
 
   for _, group in ipairs(non_word_rules) do
