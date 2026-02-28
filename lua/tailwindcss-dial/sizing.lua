@@ -72,9 +72,7 @@ local block_dims = {
   "dvw",
   "dvh",
   "lvw",
-  "1vh",
-  "dvw",
-  "dvh",
+  "lvh",
   "svw",
   "svh",
 }
