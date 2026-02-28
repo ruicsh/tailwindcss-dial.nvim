@@ -16,7 +16,7 @@ local spacing = require("tailwindcss-dial.spacing")
 local svg = require("tailwindcss-dial.svg")
 local tables = require("tailwindcss-dial.tables")
 local transforms = require("tailwindcss-dial.transforms")
-local transitions_animation = require("tailwindcss-dial.transitions_animation")
+local transitions_animation = require("tailwindcss-dial.transitions-animation")
 local typography = require("tailwindcss-dial.typography")
 local variants = require("tailwindcss-dial.variants")
 
