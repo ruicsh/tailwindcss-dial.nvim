@@ -1,5 +1,7 @@
 local M = {}
 
+local cached_augends = nil
+
 local accessibility = require("tailwindcss-dial.accessibility")
 local backgrounds = require("tailwindcss-dial.backgrounds")
 local borders = require("tailwindcss-dial.borders")
@@ -20,6 +22,10 @@ local variants = require("tailwindcss-dial.variants")
 
 --- @return table[]
 function M.augends()
+  if cached_augends then
+    return cached_augends
+  end
+
   local augend = require("dial.augend")
 
   local result = {}
@@ -234,6 +240,7 @@ function M.augends()
     )
   end
 
+  cached_augends = result
   return result
 end
 
